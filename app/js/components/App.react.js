@@ -3,6 +3,8 @@
 var React = require('react');
 var $ = require('zeptojs');
 var CustomProtoHelper = require('../utils/CustomProtoHelper');
+const { appName, path } = require('../utils/settings');
+
 
 var App = React.createClass({
   getInitialState: function() {
@@ -15,14 +17,18 @@ var App = React.createClass({
     var token = CustomProtoHelper.token;
     var component = this;
 
-    $.getJSON('https://api.actor.im/v1/groups/invites/' + token, function(resp) {
-      console.debug(resp);
-      component.setState({
-        isLoading: false,
-        group: resp.group,
-        inviter: resp.inviter
+    $.getJSON(path.apiLink + '/v1/groups/invites/' + token,
+      {
+        dataType: 'jsonp'
+      },
+      function(resp) {
+        console.debug(resp);
+        component.setState({
+          isLoading: false,
+          group: resp.group,
+          inviter: resp.inviter
+        });
       });
-    });
 
   },
 
@@ -32,7 +38,7 @@ var App = React.createClass({
     var clicked = +new Date();
 
     if (CustomProtoHelper.isMobile) {
-      joinLink = CustomProtoHelper.isAndroid ? 'https://actor.im/android' : 'https://actor.im/ios';
+      joinLink = CustomProtoHelper.isAndroid ? path.androidDownload : path.iosDownload;
     }
     window.setTimeout(function () {
       if (+new Date() - clicked < timeout * 2) {
@@ -52,7 +58,7 @@ var App = React.createClass({
 
     var group = this.state.group;
     var inviter = this.state.inviter;
-    
+
     return (
       <div className="container">
         <section className="invite">
@@ -68,13 +74,13 @@ var App = React.createClass({
 
           {
             inviter
-              ? 
+              ?
                 <div className="invite__body">
                   <p>
                     <strong>{inviter.name}</strong> invites you to join a <strong>group chat</strong>.
                   </p>
-                </div>            
-              : 
+                </div>
+              :
                 null
           }
           <footer className="invite__footer">
@@ -84,13 +90,13 @@ var App = React.createClass({
 
         <section className="install">
           <div className="large">
-            Not using <strong>Actor</strong> yet?
+            Not using <strong>{appName}</strong> yet?
             <br/>
-            <a className="down-button" href="//actor.im/dl">Download</a> our apps. It's free and secure!
+            <a className="down-button" href={path.downloadLink}>Download</a> our apps. It's free and secure!
           </div>
-          <a className="small" href="//actor.im/dl">
+          <a className="small" href={path.downloadLink}>
             Not using <strong>Actor</strong> yet? Download right now.
-            <img src="//quit.email/img/download_icon.png" alt=""/>
+            <img src="/img/download_icon.png" alt=""/>
           </a>
         </section>
       </div>
