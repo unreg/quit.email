@@ -1,6 +1,6 @@
 # quit.email
 
-## Set invite url to server.conf, e.g. invite.domain.tld
+## Set invite url in server.conf, e.g. invite.domain.tld
 ```
 modules {
     ...
